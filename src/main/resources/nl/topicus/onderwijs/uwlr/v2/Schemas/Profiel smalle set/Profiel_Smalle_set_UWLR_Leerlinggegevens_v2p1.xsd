@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  attributeFormDefault="unqualified" elementFormDefault="qualified"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens"
+  version="2.1"
+  xmlns="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens">
+  <!-- ================================================================== -->
+  <!--* Schema van elementen van profiel "Smalle Set" op UWLR2
+    
+        Profiel_Smalle_set_UWLR_Leerlinggegevens_v2p1.xsd (versie 2016-01-12)
+        
+        Wijzigingshistorie:
+        2016-01-12: eerste versie voor UWLR v2.1.
+	-->
+  <!-- ================================================================== -->
+  <!-- -->
+  <xs:annotation>
+    <xs:documentation>
+      <auteur>Jos van der Arend. Origineel door Marc Fleischeuers en Erik Siegel (UWLR v1.0).
+      </auteur>
+      <omschrijving>Dit document definieert de structuur voor het opslaan van Leeerlinggegevens
+        conform het profiel "Smalle set" op de afspraak UWLR 2.1 (zie www.edustandaard.nl).
+      </omschrijving>
+      <versie>2.1</versie>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:attributeGroup name="agVocabulaireBinding">
+    <xs:attribute name="vocabulaire" type="xs:anyURI"/>
+    <xs:attribute form="unqualified" name="vocabulairelocatie" type="xs:anyURI"/>
+  </xs:attributeGroup>
+  <xs:complexType name="ctpLeeg">
+    <xs:annotation>
+      <xs:documentation>Type om een verplicht leeg element mee aan te duiden</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="ctpVocabulaireGebondenVeld">
+    <xs:simpleContent>
+      <xs:extension base="tpString256">
+        <xs:attributeGroup ref="agVocabulaireBinding"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="leerlinggegevens_verzoek">
+    <xs:complexType>
+      <xs:group ref="gVerzoekBasis"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="leerlinggegevens_antwoord">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="leerlinggegevens"/>
+        <xs:group ref="gAntwoordUitzonderingen"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LeerkrachtenFault" type="soap:Fault"/>
+  <xs:element name="LeerlingenFault" type="soap:Fault"/>
+  <xs:element name="StructuurFault" type="soap:Fault"/>
+  <!-- Structuur -->
+  <xs:element name="leerlinggegevens">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="SchoolType"/>
+        <!--profiel inbeperking
+        <xs:element name="vestigingen" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="vestiging" type="VestigingType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        -->
+        <xs:element minOccurs="0" name="groepen">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:choice>
+                <xs:element name="groep" type="GroepType"/>
+                <xs:element name="samengestelde_groep" type="SamengesteldeGroepType"/>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="leerlingen">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerling" type="LeerlingType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="leerkrachten">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerkracht" type="LeerkrachtType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="groepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/groep"/>
+    </xs:key>
+    <xs:key name="samengesteldegroepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/samengestelde_groep"/>
+    </xs:key>
+    <xs:key name="leerlingKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerlingen/leerling"/>
+    </xs:key>
+    <xs:key name="leerkrachtKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerkrachten/leerkracht"/>
+    </xs:key>
+    <xs:keyref name="groepsRefLeerling" refer="groepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerlingen/leerling/groep"/>
+    </xs:keyref>
+    <xs:keyref name="samengesteldegroepsRefLeerling" refer="samengesteldegroepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerlingen/leerling/samengestelde_groepen/samengestelde_groep"/>
+    </xs:keyref>
+    <xs:keyref name="groepsRefLeerkracht" refer="groepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerkrachten/leerkracht/groepen/groep"/>
+    </xs:keyref>
+    <xs:keyref name="samengesteldegroepsRefLeerkracht" refer="samengesteldegroepsKey">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerkrachten/leerkracht/groepen/samengestelde_groep"/>
+    </xs:keyref>
+    <xs:unique name="groepKeyUnique">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/*"/>
+    </xs:unique>
+    <!--profiel inbeperking
+    <xs:key name="vestigingsKey">
+      <xs:selector xpath="vestigingen/vestiging"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:keyref name="vestigingsRefLeerling" refer="vestigingsKey">
+      <xs:selector xpath="leerlingen/leerling/vestiging"/>
+      <xs:field xpath="@key"/>
+    </xs:keyref>
+    -->
+  </xs:element>
+  <xs:element name="Structuur_verzoek">
+    <xs:annotation>
+      <xs:documentation>Request: Ophalen alleen structuur (school, groepen)</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:group ref="gVerzoekBasis"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Structuur_antwoord">
+    <xs:annotation>
+      <xs:documentation>Response: Antwoord op alleen structuur verzoek</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="leerlinggegevens-structuur"/>
+        <xs:group ref="gAntwoordUitzonderingen"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <!-- Leerlingen -->
+  <xs:element name="leerlinggegevens-structuur">
+    <xs:annotation>
+      <xs:documentation>Data structuur bij het ophalen van alleen de schoolstructuur
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="SchoolType"/>
+        <!--profiel inbeperking
+       <xs:element name="vestigingen" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="vestiging" type="VestigingType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        -->
+        <xs:element minOccurs="0" name="groepen">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:choice>
+                <xs:element name="groep" type="GroepType"/>
+                <xs:element name="samengestelde_groep" type="SamengesteldeGroepType"/>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="groepsKey-structuur">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/groep"/>
+    </xs:key>
+    <xs:key name="samengesteldegroepsKey-structuur">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/samengestelde_groep"/>
+    </xs:key>
+    <xs:unique name="groepKeyUnique-structuur">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="groepen/*"/>
+    </xs:unique>
+    <!--profiel inbeperking
+    <xs:key name="vestigingsKey-structuur">
+      <xs:selector xpath="vestigingen/vestiging"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    -->
+  </xs:element>
+  <xs:element name="Leerlingen_verzoek">
+    <xs:annotation>
+      <xs:documentation>Request: Ophalen leerlinggegevens op basis van een groepenlijst
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="gVerzoekBasis"/>
+        <xs:group ref="gVerzoekGroepenRef"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Leerlingen_antwoord">
+    <xs:annotation>
+      <xs:documentation>Response: Antwoord op alleen leerlinggegevens verzoek
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="leerlinggegevens-leerlingen"/>
+        <xs:group ref="gAntwoordUitzonderingen"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <!-- Leerkrachten -->
+  <xs:element name="leerlinggegevens-leerlingen">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="SchoolType"/>
+        <xs:element name="leerlingen">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerling" type="LeerlingType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="leerlingKey-leerlingen">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerlingen/leerling"/>
+    </xs:key>
+  </xs:element>
+  <xs:element name="Leerkrachten_verzoek">
+    <xs:annotation>
+      <xs:documentation>Request: Ophalen leerkracht gegevens op basis van een groepenlijst
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="gVerzoekBasis"/>
+        <xs:group ref="gVerzoekGroepenRef"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Leerkrachten_antwoord">
+    <xs:annotation>
+      <xs:documentation>Response: Antwoord op alleen leerkracht gegevens verzoek
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="leerlinggegevens-leerkrachten"/>
+        <xs:group ref="gAntwoordUitzonderingen"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="leerlinggegevens-leerkrachten">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="SchoolType"/>
+        <xs:element minOccurs="0" name="leerkrachten">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerkracht" type="LeerkrachtType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="leerkrachtKey-leerkrachten">
+      <xs:field xpath="@key"/>
+      <xs:selector xpath="leerkrachten/leerkracht"/>
+    </xs:key>
+  </xs:element>
+  <xs:group name="gVerzoekBasis">
+    <xs:sequence>
+      <xs:element name="schooljaar" type="tpSchooljaar"/>
+      <xs:element name="xsdversie" type="tpString32"/>
+      <xs:element minOccurs="0" name="laatstontvangengegevens" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>Indien afwezig moet het LAS altijd de leerlinggegevens sturen
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:group ref="gSchoolIdentificatie"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="gVerzoekGroepenRef">
+    <xs:sequence>
+      <xs:element name="groepen">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element name="groep">
+              <xs:complexType>
+                <xs:attribute form="unqualified" name="key" type="tpKey">
+                  <xs:annotation>
+                    <xs:documentation>Id (key) van de betreffende groep (stamgroep). Indien afwezig
+                      worden alle leerling resp. leerkracht gegevens opgehaald die niet aan een
+                      groep gebonden zijn.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="samengestelde_groep">
+              <xs:complexType>
+                <xs:attribute form="unqualified" name="key" type="tpKey">
+                  <xs:annotation>
+                    <xs:documentation>Id (key) van de betreffende subgroep. Indien afwezig worden
+                      alle leerling resp. leerkracht gegevens opgehaald die niet aan een subgroep
+                      gebonden zijn.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="gAntwoordUitzonderingen">
+    <xs:choice>
+      <xs:element name="geenwijzigingen" type="ctpLeeg">
+        <xs:annotation>
+          <xs:documentation>Er zijn geen wijzigingen sinds het in het verzoek aangegeven
+            datum/tijd
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="geengegevens" type="ctpLeeg">
+        <xs:annotation>
+          <xs:documentation>Er zijn bij dit verzoek geen gegevens gevonden</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="gSchoolIdentificatie">
+    <xs:choice>
+      <xs:element name="schoolkey" type="tpString64"/>
+      <xs:sequence>
+        <xs:element name="brincode" type="tpBrinCode"/>
+        <xs:element default="00" minOccurs="0" name="dependancecode">
+          <xs:annotation>
+            <xs:documentation>De inhoud 00 is betekent hetzelfde als leeg</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="tpDependanceCode">
+              <xs:pattern value="\p{Nd}{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:choice>
+  </xs:group>
+  <xs:import namespace="http://schemas.xmlsoap.org/soap/envelope/"
+    schemaLocation="../SOAP_Envelope.xsd"/>
+  <xs:include schemaLocation="Profiel_Smalle_set_EDEXML.elementen.xsd"/>
+  <xs:simpleType name="tpSchooljaar">
+    <xs:annotation>
+      <xs:documentation>Formaat: jaar-jaar, bijvoorbeeld: 2011-2012</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[1-2]\p{Nd}{3}-[1-2]\p{Nd}{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpBrinCode">
+    <xs:annotation>
+      <xs:documentation>Brincode school. Formaat 99XX</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\p{Nd}{2}\p{Lu}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpDependanceCode">
+    <xs:restriction base="tpString32">
+      <xs:pattern value="\p{Nd}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString32">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 32.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="32"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString64">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 64.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="64"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tpString128">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 128.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="128"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString256">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 256.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="256"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpKey">
+    <xs:restriction base="tpString256"></xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
+

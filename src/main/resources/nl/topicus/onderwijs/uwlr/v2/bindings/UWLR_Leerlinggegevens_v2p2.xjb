@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--suppress ALL -->
+<jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  version="2.1">
+  <jaxws:bindings schemaLocation="UWLR_Leerlinggegevens.wsdl">
+    <jaxws:bindings node="wsdl:definitions/wsdl:portType[@name='prtLeerlinggegevens']">
+      <jaxws:class name="UwlrEndpointInterfaceV2"></jaxws:class>
+    </jaxws:bindings>
+    <jaxws:bindings node="wsdl:definitions/wsdl:service[@name='LeerlinggegevensService']">
+      <jaxws:class name="UwlrServiceInterfaceV2"></jaxws:class>
+    </jaxws:bindings>
+  </jaxws:bindings>
+  <jaxws:globalBindings generateElementProperty="false">
+    <xjc:simple/>
+  </jaxws:globalBindings>
+</jaxws:bindings>

@@ -1,0 +1,15 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <import resource="classpath:META-INF/cxf/cxf.xml"/>
+
+  <!-- Leerlinggegevens webservice -->
+  <!--	<jaxws:endpoint
+        id="eck2Leerlinggegevens"
+        implementorClass="nl.topicus.onderwijs.uwlr.v1.webservice.impl.Eck2LeerlinggegevensService"
+        implementor="#eck2LeerlinggegevensService" address="/v1/leerlinggegevens"
+        serviceName="leerlinggegevensService">
+    </jaxws:endpoint>-->
+
+</beans>

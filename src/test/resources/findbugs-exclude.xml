@@ -1,114 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FindBugsFilter>
-	<!-- 
-	   Ernesto's notification thingies are full of bugs, lets ignore them 
+  <!--
+     Ernesto's notification thingies are full of bugs, lets ignore them
   -->
-	<Match>
-		<Package name="~nl\.topicus\.notification.*" />
-	</Match>
+  <Match>
+    <Package name="~nl\.topicus\.notification.*"/>
+  </Match>
 
-	<!--
-		Generated code (want to check, but can't (easily) change) 
- 	-->
-	<Match>
-	   <Or>
-		  <Package name="~nl\.vis2\.*" />
-		  <Package name="~nl\.topicus\.iridium\.webservice"/>
-		</Or>
-	</Match>
-	
-	<!-- 
-	   The onderwijsbrug/onderwijsbrug+ client api is mostly generated code which we do not 
-	   want to have checked. 
-	-->
-	<Match>
-		<Or>
-			<Package name="~nl\.onderwijsbrug\.*" />
-			<Package name="~nl\.onderwijsbrugplus\.*" />
-		</Or>
-	</Match>
+  <!--
+    Generated code (want to check, but can't (easily) change)
+   -->
+  <Match>
+    <Or>
+      <Package name="~nl\.vis2\.*"/>
+      <Package name="~nl\.topicus\.iridium\.webservice"/>
+    </Or>
+  </Match>
 
-	<Match>
-		<Or>
-			<Bug pattern="SE_BAD_FIELD" />
-			<Package name="~nl\.topicus\.iridium\.web\.components\.*" />
-			<Package name="~nl\.topicus\.iridium\.web\.gui\.*" />
-		</Or>
-	</Match>
-	
-	<!-- 
-	   The bug pattern "Class names shouldn't shadow simple name of implemented
-		 interface" is not applicable, as many of our filters implement an
-		 identically named interface. 
+  <!--
+     The onderwijsbrug/onderwijsbrug+ client api is mostly generated code which we do not
+     want to have checked.
+  -->
+  <Match>
+    <Or>
+      <Package name="~nl\.onderwijsbrug\.*"/>
+      <Package name="~nl\.onderwijsbrugplus\.*"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Or>
+      <Bug pattern="SE_BAD_FIELD"/>
+      <Package name="~nl\.topicus\.iridium\.web\.components\.*"/>
+      <Package name="~nl\.topicus\.iridium\.web\.gui\.*"/>
+    </Or>
+  </Match>
+
+  <!--
+     The bug pattern "Class names shouldn't shadow simple name of implemented
+     interface" is not applicable, as many of our filters implement an
+     identically named interface.
     -->
-	<Match>
-		<Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE" />
-		<Or>
-			<Package name="~nl\.topicus\.iridium\.dao\.hibernate.*" />
-			<Package name="~nl\.topicus\.onderwijs\.duo\.bron\.vo\.batches\.examen" />
-			<Package name="~nl\.topicus\.iridium\.util\.bron\.koppeling\.examen" />
-			<Package name="~nl\.topicus\.iridium\.dao\.junit" />
-			<Package name="~nl\.topicus\.rhodium\.dao\.hibernate" />
-		</Or>
-	</Match>
+  <Match>
+    <Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE"/>
+    <Or>
+      <Package name="~nl\.topicus\.iridium\.dao\.hibernate.*"/>
+      <Package name="~nl\.topicus\.onderwijs\.duo\.bron\.vo\.batches\.examen"/>
+      <Package name="~nl\.topicus\.iridium\.util\.bron\.koppeling\.examen"/>
+      <Package name="~nl\.topicus\.iridium\.dao\.junit"/>
+      <Package name="~nl\.topicus\.rhodium\.dao\.hibernate"/>
+    </Or>
+  </Match>
 
-     <Match>
-        <Class name="nl.topicus.iridium.spring.StaticSpringUtils" />
-        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
-    </Match>
-    
-    <!--  Seems to be a bug in findbugs! -->
-    <Match>
-        <Class name="nl.topicus.iridium.security.authorization.NodeIterator" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
-    </Match>
-    
-    <!-- We're not afraid of SQL injection in the update tasks -->
-    <Match>
-        <Class name="nl.topicus.iridium.util.update2.DBVersionHandleImpl" />
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
-    </Match>
-    
-    <Match>
-        <Or>
-            <!-- This bug pattern is just annoying. -->
-            <Bug pattern="MS_MUTABLE_ARRAY" />
-            
-            <!-- Generated code interferes with this feature -->
-            <Bug pattern="NM_CONFUSING" />
-            
-            <!-- All our code runs priviliged -->
-            <Bug pattern="DP_DO_INSIDE_DO_PRIVILEGED" />
-        
-            <!-- Serializable inner classes could be static, but requires too much effort to clean up. -->
-	        <Bug pattern="SE_INNER_CLASS" />
-	        
-	        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
-	        
-	        <Bug pattern="EQ_OVERRIDING_EQUALS_NOT_SYMMETRIC" />
-	        
-	        <!-- clone() should run super, but sometimes we cannot work around it -->
-	         <Bug pattern="CN_IDIOM_NO_SUPER_CALL" />
-	         
-	          <!-- Although returning a Boolean value is confusing, to say the least, in some cases our
-                 design does not leave any other possibility. -->
-	         <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
-	         
-	         <Bug pattern="MS_PKGPROTECT" />
-	         
-	         <!-- We're not afraid someone might change the value of our mutable static fields. -->
-	         <Bug pattern="MS_OOI_PKGPROTECT" />
-	         
-	         <!--  Inconsistent synchronization is not an issue afaik -->
-	         <Bug pattern="IS2_INCONSISTENT_SYNC" />
-	         
-	         <!-- True, this might be a bug, but not in our case. -->
-	         <Bug pattern="DMI_THREAD_PASSED_WHERE_RUNNABLE_EXPECTED" />
-	         
-	         <!-- equals() method can use reflection to find equivalence, causing this pattern to match. -->
-	         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
-        </Or>
-    </Match>
-    
+  <Match>
+    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+    <Class name="nl.topicus.iridium.spring.StaticSpringUtils"/>
+  </Match>
+
+  <!--  Seems to be a bug in findbugs! -->
+  <Match>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    <Class name="nl.topicus.iridium.security.authorization.NodeIterator"/>
+  </Match>
+
+  <!-- We're not afraid of SQL injection in the update tasks -->
+  <Match>
+    <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+    <Class name="nl.topicus.iridium.util.update2.DBVersionHandleImpl"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <!-- This bug pattern is just annoying. -->
+      <Bug pattern="MS_MUTABLE_ARRAY"/>
+
+      <!-- Generated code interferes with this feature -->
+      <Bug pattern="NM_CONFUSING"/>
+
+      <!-- All our code runs priviliged -->
+      <Bug pattern="DP_DO_INSIDE_DO_PRIVILEGED"/>
+
+      <!-- Serializable inner classes could be static, but requires too much effort to clean up. -->
+      <Bug pattern="SE_INNER_CLASS"/>
+
+      <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+
+      <Bug pattern="EQ_OVERRIDING_EQUALS_NOT_SYMMETRIC"/>
+
+      <!-- clone() should run super, but sometimes we cannot work around it -->
+      <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
+
+      <!-- Although returning a Boolean value is confusing, to say the least, in some cases our
+           design does not leave any other possibility. -->
+      <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+
+      <Bug pattern="MS_PKGPROTECT"/>
+
+      <!-- We're not afraid someone might change the value of our mutable static fields. -->
+      <Bug pattern="MS_OOI_PKGPROTECT"/>
+
+      <!--  Inconsistent synchronization is not an issue afaik -->
+      <Bug pattern="IS2_INCONSISTENT_SYNC"/>
+
+      <!-- True, this might be a bug, but not in our case. -->
+      <Bug pattern="DMI_THREAD_PASSED_WHERE_RUNNABLE_EXPECTED"/>
+
+      <!-- equals() method can use reflection to find equivalence, causing this pattern to match. -->
+      <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Or>
+  </Match>
+
 </FindBugsFilter>

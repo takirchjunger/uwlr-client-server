@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project xmlns:con="http://eviware.com/soapui/config"
+  abortOnError="false" activeEnvironment="Default" defaultScriptLanguage="Groovy"
+  name="LR-Test-Leerlinggegevens" resourceRoot="${projectDir}" runType="SEQUENTIAL"
+  soapui-version="4.5.0">
+  <con:interface xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" anonymous="optional"
+    bindingName="{http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens}bndLeerlinggegevens" definition="http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Leerlinggegevens.wsdl"
+    name="bndLeerlinggegevens"
+    soapVersion="1_1" type="wsdl"
+    wsaVersion="NONE"
+    xsi:type="con:WsdlInterface">
+    <con:definitionCache rootPart="http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Leerlinggegevens.wsdl"
+      type="TEXT">
+      <con:part>
+        <con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:lg="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie">
+  <wsdl:types>
+    <xs:schema>
+      <xs:import schemaLocation="NLALR_Leerlinggegevens_v1p0.xsd" namespace="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens"/>
+      <xs:import schemaLocation="NLALR_Autorisatie_v1p0.xsd" namespace="http://www.edustandaard.nl/leerresultaten/1/autorisatie"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="msgHeader">
+    <wsdl:part name="msgpHeader" element="aut:autorisatie"/>
+  </wsdl:message>
+  <wsdl:message name="msgLeerlinggegevensVerzoek">
+    <wsdl:part name="msgpLeerlinggegevensVerzoek" element="lg:leerlinggegevensverzoek"/>
+  </wsdl:message>
+  <wsdl:message name="msgLeerlinggegevensAntwoord">
+    <wsdl:part name="msgpLeerlinggegevensAntwoord" element="lg:leerlinggegevensantwoord"/>
+  </wsdl:message>
+  <wsdl:portType name="prtLeerlinggegevens">
+    <wsdl:operation name="HaalLeerlinggegevens">
+      <wsdl:input message="lg:msgLeerlinggegevensVerzoek"/>
+      <wsdl:output message="lg:msgLeerlinggegevensAntwoord"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="bndLeerlinggegevens" type="lg:prtLeerlinggegevens">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="HaalLeerlinggegevens">
+      <soap:operation soapAction="HaalLeerlinggegevens"/>
+      <wsdl:input>
+        <soap:header message="lg:msgHeader" part="msgpHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LeerlinggegevensService">
+    <wsdl:port name="prtLeerlinggegevensService" binding="lg:bndLeerlinggegevens">
+      <soap:address location="http://dev.uwlr.nl:8080/exist/wslg">
+        <!--== Location adapted to server type. Original location: "http://localhost:8080/exist/apps/LrTestLas/wslg" ==-->
+      </soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content>
+        <con:type>http://schemas.xmlsoap.org/wsdl/</con:type>
+        <con:url>http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Leerlinggegevens.wsdl</con:url>
+      </con:part>
+      <con:part>
+        <con:content><![CDATA[<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" targetNamespace="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens" xmlns="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens" xmlns:lg="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--==================================================================-->
+  <!--* Schema voor de leerlinggegevens.
+
+    SVN: $Id: LR-Test-Leerlinggegevens-soapui-project.xml 964 2012-03-14 08:11:11Z erik $-->
+  <!--==================================================================-->
+  <xs:include schemaLocation="NLALR_Algemeen_v1p0.xsd"/>
+  <!---->
+  <xs:element name="leerlinggegevensverzoek">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="schooljaar" type="tpSchooljaar"/>
+        <xs:group ref="gSchoolIdentificatie"/>
+        <xs:element name="xsdversie" type="tpString32"/>
+        <xs:element minOccurs="0" name="laatstontvangengegevens" type="xs:dateTime">
+          <xs:annotation>
+            <xs:documentation>Indien afwezig moet het LAS altijd de leerlinggegevens sturen</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="leerlinggegevensantwoord">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="leerlinggegevens"/>
+        <xs:element name="geenwijzigingen" type="ctpLeeg">
+          <xs:annotation>
+            <xs:documentation>Er zijn geen wijzigingen sinds het in het verzoek aangegeven datum/tijd</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="leerlinggegevens">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="ctpSchool"/>
+        <xs:element minOccurs="0" name="groepen">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="groep" type="ctpGroep"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="subgroepen">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="subgroep" type="ctpGroep"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="leerlingen">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerling" type="ctpLeerling"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="leerkrachten">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="leerkracht" type="ctpLeerkracht"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="kLeerling">
+      <xs:selector xpath="lg:leerlingen/lg:leerling"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:key name="kLeerkracht">
+      <xs:selector xpath="lg:leerkrachten/lg:leerkracht"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:key name="kGroep">
+      <xs:selector xpath="lg:groepen/lg:groep"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:key name="kSubgroep">
+      <xs:selector xpath="lg:subgroepen/lg:subgroep"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:keyref name="krLeerlingGroep" refer="kGroep">
+      <xs:selector xpath="lg:leerlingen/lg:leerling/lg:groep"/>
+      <xs:field xpath="@key"/>
+    </xs:keyref>
+    <xs:keyref name="krLeerlingSubgroep" refer="kSubgroep">
+      <xs:selector xpath="lg:leerlingen/lg:leerling/lg:subgroepen/lg:groep"/>
+      <xs:field xpath="@key"/>
+    </xs:keyref>
+    <xs:keyref name="krLeerkrachtGroep" refer="kGroep">
+      <xs:selector xpath="lg:leerkrachten/lg:leerkracht/lg:groepen/lg:groep"/>
+      <xs:field xpath="@key"/>
+    </xs:keyref>
+    <xs:keyref name="krLeerkrachtSubgroep" refer="kSubgroep">
+      <xs:selector xpath="lg:leerkrachten/lg:leerkracht/lg:subgroepen/lg:groep"/>
+      <xs:field xpath="@key"/>
+    </xs:keyref>
+  </xs:element>
+  <xs:complexType final="extension" name="ctpGroep">
+    <xs:sequence>
+      <xs:element name="naam" type="tpString64"/>
+      <xs:element minOccurs="0" name="omschrijving" type="tpString128"/>
+      <xs:element minOccurs="0" name="mutatiedatum" type="xs:dateTime"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="tpKey" use="required"/>
+  </xs:complexType>
+  <xs:complexType final="extension" name="ctpLeerling">
+    <xs:sequence>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="achternaam" type="tpAchternaam"/>
+          <xs:element minOccurs="0" name="voorvoegsel" type="tpVoorvoegsel"/>
+          <xs:element minOccurs="0" name="voorletters-1" type="tpVoorletters-1"/>
+          <xs:element minOccurs="0" name="roepnaam" type="tpRoepnaam"/>
+        </xs:sequence>
+        <xs:element name="roepnaam" type="tpRoepnaam"/>
+      </xs:choice>
+      <xs:element name="geboortedatum" type="xs:date"/>
+      <xs:element name="jaargroep" type="ctpVocabulaireGebondenVeld"/>
+      <xs:group minOccurs="0" ref="gGroepRef">
+        <xs:annotation>
+          <xs:documentation>Referentie naar de hoofdgroep voor deze leerling</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element minOccurs="0" name="subgroepen">
+        <xs:complexType>
+          <xs:group maxOccurs="unbounded" ref="gGroepRef"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="mutatiedatum" type="xs:dateTime"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="tpKey" use="required"/>
+  </xs:complexType>
+  <xs:complexType final="extension" name="ctpLeerkracht">
+    <xs:sequence>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="achternaam" type="tpAchternaam"/>
+          <xs:element minOccurs="0" name="voorvoegsel" type="tpVoorvoegsel"/>
+          <xs:element minOccurs="0" name="voorletters-1" type="tpVoorletters-1"/>
+          <xs:element minOccurs="0" name="roepnaam" type="tpRoepnaam"/>
+        </xs:sequence>
+        <xs:element name="roepnaam" type="tpRoepnaam"/>
+      </xs:choice>
+      <xs:element name="emailadres" type="tpEmailadres" minOccurs="0"/>
+      <xs:element minOccurs="0" name="groepen">
+        <xs:complexType>
+          <xs:group maxOccurs="unbounded" ref="gGroepRef"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="subgroepen">
+        <xs:complexType>
+          <xs:group maxOccurs="unbounded" ref="gGroepRef"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="mutatiedatum" type="xs:dateTime"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="tpKey" use="required"/>
+  </xs:complexType>
+  <xs:simpleType name="tpAchternaam">
+    <xs:annotation>
+      <xs:documentation>NEN 1888 Achternaam.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="70"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpVoorvoegsel">
+    <xs:annotation>
+      <xs:documentation>NEN 1888 Voorvoegsel.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpVoorletters-1">
+    <xs:annotation>
+      <xs:documentation>NEN 1888 Voorletters-1.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpRoepnaam">
+    <xs:restriction base="tpString64"/>
+  </xs:simpleType>
+  <xs:simpleType name="tpEmailadres">
+    <xs:restriction base="tpString128"/>
+  </xs:simpleType>
+  <xs:group name="gGroepRef">
+    <xs:sequence>
+      <xs:element name="groep">
+        <xs:complexType>
+          <xs:attribute form="unqualified" name="key" type="tpKey"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>]]></con:content>
+        <con:type>http://www.w3.org/2001/XMLSchema</con:type>
+        <con:url>http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Leerlinggegevens_v1p0.xsd</con:url>
+      </con:part>
+      <con:part>
+        <con:content><![CDATA[<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--==================================================================-->
+  <!--* Schema met een aantal algemene definities voor gebruik binnen de
+    overdracht van leerlinggegevens en leerresultaten.
+
+    SVN: $Id: LR-Test-Leerlinggegevens-soapui-project.xml 964 2012-03-14 08:11:11Z erik $-->
+  <!--==================================================================-->
+  <xs:complexType final="extension" name="ctpSchool">
+    <xs:sequence>
+      <xs:element name="schooljaar" type="tpSchooljaar"/>
+      <xs:group ref="gSchoolIdentificatie"/>
+      <xs:element name="aanmaakdatum" type="xs:dateTime"/>
+      <xs:element name="xsdversie" type="tpString32">
+        <xs:annotation>
+          <xs:documentation>Altijd gelijk aan de versie van de XSD waaraan gerefereerd
+            wordt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="auteur" type="tpString128"/>
+      <xs:element minOccurs="0" name="commentaar" type="tpString128"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="gSchoolIdentificatie">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="brincode" type="tpBrinCode"/>
+        <xs:element minOccurs="0" name="dependancecode" type="tpDependanceCode"/>
+      </xs:sequence>
+      <xs:element name="schoolkey" type="tpString64"/>
+    </xs:choice>
+  </xs:group>
+  <xs:simpleType name="tpBrinCode">
+    <xs:annotation>
+      <xs:documentation>Brincode school. Formaat 99XX.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\p{Nd}{2}\p{Lu}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpSchooljaar">
+    <xs:annotation>
+      <xs:documentation>Formaat: jaar-jaar, bijvoorbeeld: 2011-2012</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[1-2]\p{Nd}{3}-[1-2]\p{Nd}{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpDependanceCode">
+    <xs:restriction base="tpString32">
+      <xs:pattern value="\p{Nd}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString128">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 128.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="128"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString64">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 64.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString32">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 32.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ctpVocabulaireGebondenVeld">
+    <xs:simpleContent>
+      <xs:extension base="tpString128">
+        <xs:attributeGroup ref="agVocabulaireBinding"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="tpKey">
+    <xs:annotation>
+      <xs:documentation>Begint altijd met een cijfer of letter, gevolgd door nul of meer cijfers,
+        letters, streepjes, underscores of punten.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="tpString128">
+      <xs:pattern value="[0-9A-Za-z]\c*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="agVocabulaireBinding">
+    <xs:attribute name="vocabulaire" type="xs:anyURI"/>
+    <xs:attribute form="unqualified" name="vocabulairelocatie" type="xs:anyURI"/>
+  </xs:attributeGroup>
+  <xs:complexType name="ctpLeeg">
+    <xs:annotation>
+      <xs:documentation>Type om een verplicht leeg element mee aan te duiden</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+</xs:schema>]]></con:content>
+        <con:type>http://www.w3.org/2001/XMLSchema</con:type>
+        <con:url>http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Algemeen_v1p0.xsd</con:url>
+      </con:part>
+      <con:part>
+        <con:content><![CDATA[<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" targetNamespace="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:au="http://www.edustandaard.nl/leerresultaten/1/autorisatie">
+  <!--==================================================================-->
+  <!--* Schema voor de autorisatie gegevens bij overdracht leerlinggegevens
+    en leerresultaten.
+
+    SVN: $Id: LR-Test-Leerlinggegevens-soapui-project.xml 964 2012-03-14 08:11:11Z erik $-->
+  <!--==================================================================-->
+  <xs:include schemaLocation="NLALR_Algemeen_v1p0.xsd"/>
+  <!---->
+  <xs:element name="autorisatie">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="autorisatiesleutel" type="tpString64"/>
+        <xs:element name="klantcode" type="tpString64"/>
+        <xs:element name="klantnaam" type="tpString64"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content>
+        <con:type>http://www.w3.org/2001/XMLSchema</con:type>
+        <con:url>http://dev.uwlr.nl:8080/exist/WSDL/NLALR_Autorisatie_v1p0.xsd</con:url>
+      </con:part>
+    </con:definitionCache>
+    <con:endpoints>
+      <con:endpoint>${#Project#endpoint}</con:endpoint>
+    </con:endpoints>
+    <con:operation action="HaalLeerlinggegevens" anonymous="optional"
+      bindingOperationName="HaalLeerlinggegevens" inputName=""
+      isOneWay="false" name="HaalLeerlinggegevens" receivesAttachments="false"
+      sendsAttachments="false" type="Request-Response">
+      <con:settings/>
+    </con:operation>
+    <con:settings/>
+  </con:interface>
+  <con:properties>
+    <con:property>
+      <con:name>endpoint</con:name>
+      <con:value>http://localhost:8080/services/v1/leerlinggegevens</con:value>
+    </con:property>
+  </con:properties>
+  <con:sensitiveInformation/>
+  <con:settings>
+    <con:setting
+      id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction@values-local">
+      <![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Global Properties" value=""/>
+  <con:entry key="TestSuite" value="Leerlinggegevens TestSuite"/>
+  <con:entry key="Report to Generate" value=""/>
+  <con:entry key="Password" value=""/>
+  <con:entry key="soapui-setings.xml Password" value=""/>
+  <con:entry key="TestRunner Path" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Ignore Errors" value="false"/>
+  <con:entry key="Host:Port" value=""/>
+  <con:entry key="WSS Password Type" value=""/>
+  <con:entry key="Save Project" value="false"/>
+  <con:entry key="Enable UI" value="false"/>
+  <con:entry key="System Properties" value=""/>
+  <con:entry key="Domain" value=""/>
+  <con:entry key="Coverage Report" value="false"/>
+  <con:entry key="Export JUnit Results" value="false"/>
+  <con:entry key="Open Report" value="false"/>
+  <con:entry key="Project Properties" value=""/>
+  <con:entry key="Project Password" value=""/>
+  <con:entry key="Export All" value="false"/>
+  <con:entry key="Report Format(s)" value=""/>
+  <con:entry key="TestCase" value="Leerlinggegevens - Controleer normaal request"/>
+  <con:entry key="Print Report" value="false"/>
+  <con:entry key="Username" value=""/>
+  <con:entry key="Root Folder" value=""/>
+  <con:entry key="Save After" value="false"/>
+  <con:entry key="Add Settings" value="false"/>
+  <con:entry key="Endpoint" value=""/>
+</xml-fragment>]]></con:setting>
+  </con:settings>
+  <con:testSuite name="Leerlinggegevens TestSuite">
+    <con:properties>
+      <con:property>
+        <con:name>autorisatiesleutel</con:name>
+        <con:value>sleutel</con:value>
+      </con:property>
+      <con:property>
+        <con:name>brincode</con:name>
+        <con:value>99XX</con:value>
+      </con:property>
+      <con:property>
+        <con:name>dependancecode</con:name>
+        <con:value/>
+      </con:property>
+      <con:property>
+        <con:name>klantcode</con:name>
+        <con:value>klantcode</con:value>
+      </con:property>
+      <con:property>
+        <con:name>klantnaam</con:name>
+        <con:value>klantnaam</con:value>
+      </con:property>
+      <con:property>
+        <con:name>laatstontvangengegevens</con:name>
+        <con:value/>
+      </con:property>
+      <con:property>
+        <con:name>schooljaar</con:name>
+        <con:value>2011-2012</con:value>
+      </con:property>
+      <con:property>
+        <con:name>schoolkey</con:name>
+        <con:value/>
+      </con:property>
+      <con:property>
+        <con:name>soapenvelopenamespaceprefix</con:name>
+        <con:value>soap</con:value>
+      </con:property>
+      <con:property>
+        <con:name>xsdversie</con:name>
+        <con:value>1.0</con:value>
+      </con:property>
+    </con:properties>
+    <con:runType>SEQUENTIAL</con:runType>
+    <con:settings/>
+    <con:testCase amfAuthorisation="false" amfEndpoint=""
+      amfLogin="" amfPassword="" failOnError="false"
+      failTestCaseOnErrors="true" id="939fc959-1838-4039-8428-a0dd7034d879" keepSession="false" maxResults="0"
+      name="LAS-LG-Nxx" searchProperties="true" timeout="0" wsrmAckTo=""
+      wsrmEnabled="false" wsrmVersion="1.0">
+      <con:properties/>
+      <con:settings/>
+      <con:testStep name="Normaal request 1" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Normaal request 1">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="Not SOAP Fault" type="SOAP Fault Assertion"/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+    </con:testCase>
+    <con:testCase amfAuthorisation="false" amfEndpoint=""
+      amfLogin="" amfPassword="" failOnError="false"
+      failTestCaseOnErrors="true" id="933881f0-7e0a-4a1e-b69b-a6d9ab8cbc2b"
+      keepSession="false" maxResults="0" name="LAS-LG-F01" searchProperties="true"
+      timeout="0" wsrmAckTo="" wsrmEnabled="false" wsrmVersion="1.0">
+      <con:properties/>
+      <con:settings/>
+      <con:testStep name="Bagger XML" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Bagger XML">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigBericht&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:kl
+
+nsverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Ongeldige autorisatieheader" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Ongeldige autorisatieheader">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.AutorisatieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute klantnaam" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute klantnaam">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigeKlantIdentificatie&lt;/faultcode></content>
+                <ignoreComments>true</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}-FOUT</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute klantcode" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute klantcode">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigeKlantIdentificatie&lt;/faultcode></content>
+                <ignoreComments>true</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}-FOUT</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute autorisatiesleutel" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute autorisatiesleutel">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.AutorisatieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}-FOUT</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Fout schooljaar" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Fout schooljaar">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigBericht&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}-FOUT</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute BRIN code" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute BRIN code">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.AutorisatieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>00ZZ</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Invalide BRIN code" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Invalide BRIN code">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigBericht&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>ONGELDIGEBRINCODE</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute dependance code" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute dependance code">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.AutorisatieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>00</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Invalide dependance code" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Invalide dependance code">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigBericht&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>ONGELDIGEDEPENDANCECODE</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute schoolkey" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute schoolkey">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.AutorisatieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+<!--
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+-->
+         <leer:schoolkey>${#TestSuite#schoolkey}-FOUT</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Foute XSD versie" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Foute XSD versie">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.XsdVersieOngeldig&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}-FOUT</leer:xsdversie>
+         <leer:laatstontvangengegevens>
+${#TestSuite#laatstontvangengegevens}</leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+      <con:testStep name="Invalide datum" type="request">
+        <con:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:type="con:RequestStep">
+          <con:interface>bndLeerlinggegevens</con:interface>
+          <con:operation>HaalLeerlinggegevens</con:operation>
+          <con:request name="Invalide datum">
+            <con:assertion name="Schema Compliance" type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion name="SOAP Fault" type="Not SOAP Fault Assertion"/>
+            <con:assertion name="XPath Match" type="XPath Match">
+              <con:configuration>
+                <allowWildcards>false</allowWildcards>
+                <content>&lt;faultcode>${#TestSuite#soapenvelopenamespaceprefix}:Client.OngeldigBericht&lt;/faultcode></content>
+                <ignoreComments>false</ignoreComments>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <path>declare namespace
+                  soap="http://schemas.xmlsoap.org/soap/envelope/";
+                  /soap:Envelope/soap:Body/soap:Fault/faultcode
+                </path>
+              </con:configuration>
+            </con:assertion>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#endpoint}</con:endpoint>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:aut="http://www.edustandaard.nl/leerresultaten/1/autorisatie" xmlns:leer="http://www.edustandaard.nl/leerresultaten/1/leerlinggegevens">
+   <soapenv:Header>
+      <aut:autorisatie>
+         <aut:autorisatiesleutel>${#TestSuite#autorisatiesleutel}</aut:autorisatiesleutel>
+         <aut:klantcode>${#TestSuite#klantcode}</aut:klantcode>
+         <aut:klantnaam>${#TestSuite#klantnaam}</aut:klantnaam>
+      </aut:autorisatie>
+   </soapenv:Header>
+   <soapenv:Body>
+      <leer:leerlinggegevensverzoek>
+         <leer:schooljaar>${#TestSuite#schooljaar}</leer:schooljaar>
+         <leer:brincode>${#TestSuite#brincode}</leer:brincode>
+         <leer:dependancecode>${#TestSuite#dependancecode}</leer:dependancecode>
+         <leer:schoolkey>${#TestSuite#schoolkey}</leer:schoolkey>
+         <leer:xsdversie>${#TestSuite#xsdversie}</leer:xsdversie>
+         <leer:laatstontvangengegevens>ONGELDIGEDATUM<leer:laatstontvangengegevens>
+      </leer:leerlinggegevensverzoek>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:settings>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+              </con:setting>
+              <con:setting
+                id="com.eviware.soapui.impl.wsdl.WsdlRequest@remove_empty_content">true
+              </con:setting>
+            </con:settings>
+            <con:wsaConfig action="HaalLeerlinggegevens"
+              mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+        <con:settings/>
+      </con:testStep>
+    </con:testCase>
+  </con:testSuite>
+  <con:wssContainer/>
+</con:soapui-project>

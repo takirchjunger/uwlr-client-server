@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  jaxb:extensionBindingPrefixes="inheritance" jaxb:version="2.1">
+  <jaxb:bindings node="/xsd:schema" schemaLocation="../Schemas/UWLR_Leerlinggegevens_v2p2.xsd">
+    <jaxb:bindings node="xsd:element[@name='leerlinggegevens-leerlingen']">
+      <jaxb:factoryMethod name="LeerlinggegevensLeerlingenWrapper"/>
+    </jaxb:bindings>
+    <jaxb:bindings node="xsd:element[@name='leerlinggegevens-leerkrachten']">
+      <jaxb:factoryMethod name="LeerlinggegevensLeerkrachtenWrapper"/>
+    </jaxb:bindings>
+  </jaxb:bindings>
+  <jaxb:bindings node="/xsd:schema" schemaLocation="../Schemas/EDEXML.elementen.xsd">
+    <jaxb:bindings
+      node="//xsd:complexType[@name='LeerlingType']//xsd:choice/xsd:element[@name='roepnaam']">
+      <jaxb:property name="roepnaamOnly"/>
+    </jaxb:bindings>
+    <jaxb:bindings
+      node="//xsd:complexType[@name='LeerkrachtType']//xsd:choice/xsd:element[@name='roepnaam']">
+      <jaxb:property name="roepnaamOnly"/>
+    </jaxb:bindings>
+    <jaxb:bindings
+      node="//xsd:complexType[@name='SchoolReferentieType']/xsd:choice/xsd:element[@name='schoolkey']">
+      <jaxb:property name="schoolkeyOnly"/>
+    </jaxb:bindings>
+    <jaxb:bindings
+      node="(//xsd:complexType[@name='SchoolType']/xsd:sequence/xsd:choice/xsd:sequence/xsd:element[@name='schoolkey'])[1]">
+      <jaxb:property name="schoolkeyBrinDependance"/>
+    </jaxb:bindings>
+    <jaxb:bindings
+      node="(//xsd:complexType[@name='SchoolType']/xsd:sequence/xsd:choice/xsd:sequence/xsd:element[@name='schoolkey'])[2]">
+      <jaxb:property name="schoolkeyInstellingsnummer"/>
+    </jaxb:bindings>
+
+  </jaxb:bindings>
+
+  <jaxb:globalBindings generateElementProperty="false"/>
+
+</jaxb:bindings>

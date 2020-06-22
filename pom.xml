@@ -1,199 +1,131 @@
-<?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>nl.topicus.onderwijs.parent</groupId>
-    <artifactId>onderwijs-parent-base</artifactId>
-    <version>2019.5.0</version>
-    <relativePath />
-  </parent>
-
   <groupId>nl.topicus.onderwijs</groupId>
-  <artifactId>eck2</artifactId>
-  <version>1.16-SNAPSHOT</version>
+  <artifactId>uwlr-client-server</artifactId>
+  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-
-  <name>ECK2 library</name>
-  <description>Library voor het werken met Eck2</description>
-  <url>http://www.topicus.nl/onderwijs</url>
-  <inceptionYear>2012</inceptionYear>
-
-  <issueManagement>
-    <system>mantis</system>
-    <url>http://bugs.topicus.nl</url>
-  </issueManagement>
-
+  <name>UWLR Client/Server library</name>
   <properties>
-    <enforcer.skip>true</enforcer.skip>
-    <topicus.version.org.apache.cxf>3.3.0</topicus.version.org.apache.cxf>
+    <cxf-codegen-plugin.version>3.3.5</cxf-codegen-plugin.version>
+    <cxf-rt-bindings-soap.version>3.3.5</cxf-rt-bindings-soap.version>
+    <cxf-rt-transports-http.version>3.2.7</cxf-rt-transports-http.version>
+    <cxf-xjc-dv.version>3.3.0</cxf-xjc-dv.version>
+    <jaxws-maven-plugin.version>2.6</jaxws-maven-plugin.version>
+    <jaxws-ri.version>2.3.2</jaxws-ri.version>
+    <jboss-servlet-api_4.0_spec.version>1.0.0.Final</jboss-servlet-api_4.0_spec.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <spring-beans.version>5.1.12.RELEASE</spring-beans.version>
   </properties>
-
+  <dependencies>
+    <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-ri</artifactId>
+      <version>${jaxws-ri.version}</version>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-bindings-soap</artifactId>
+      <version>${cxf-rt-bindings-soap.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http</artifactId>
+      <version>${cxf-rt-transports-http.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+      <version>${jboss-servlet-api_4.0_spec.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring-beans.version}</version>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+    </dependencies>
+  </dependencyManagement>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <release>11</release>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxws-maven-plugin</artifactId>
+          <version>${jaxws-maven-plugin.version}</version>
+          <configuration>
+            <useJdkToolchainExecutable>true</useJdkToolchainExecutable>
+          </configuration>
+          <executions>
+            <!-- UWLR v2.2 services -->
+            <execution>
+              <configuration>
+                <bindingDirectory>
+                  ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v2/bindings
+                </bindingDirectory>
+                <bindingFiles>
+                  <bindingFile>UWLR_Leerlinggegevens_v2p2.xjb</bindingFile>
+                  <bindingFile>bindigns.xjb</bindingFile>
+                </bindingFiles>
+                <extension>true</extension>
+                <keep>true</keep>
+                <sourceDestDir>${basedir}/target/generated-sources/webservice</sourceDestDir>
+                <verbose>true</verbose>
+                <wsdlFiles>
+                  <wsdlFile>
+                    ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v2/wsdl/UWLR_Leerlinggegevens_v2p2.wsdl
+                  </wsdlFile>
+                </wsdlFiles>
+              </configuration>
+              <goals>
+                <goal>wsimport</goal>
+              </goals>
+              <id>UWLR v2.2</id>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-codegen-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+  <description>Library voor het werken met Eck2, functionaliteit voor client en server</description>
   <developers>
     <developer>
+      <name>Tom Kirchjünger</name>
       <id>kirchjunger</id>
-      <name>Tom Kirchjunger</name>
       <roles>
         <role>Developer</role>
       </roles>
       <timezone>1</timezone>
     </developer>
   </developers>
-
+  <inceptionYear>2020</inceptionYear>
   <scm>
-    <url>https://github.com/topicusonderwijs/eck2</url>
-    <connection>scm:git:git@github.com:topicusonderwijs/eck2.git</connection>
+    <connection>scm:git:git@github.com:takirchjunger/eck2-client-server.git</connection>
     <tag>HEAD</tag>
+    <url>https://github.com/takirchjunger/eck2-client-server</url>
   </scm>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>nl.topicus.onderwijs.parent</groupId>
-        <artifactId>onderwijs-parent-bom-cxf-packaged</artifactId>
-        <version>${topicus.version.onderwijsparent}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.sun.xml.ws</groupId>
-      <artifactId>jaxws-ri</artifactId>
-      <version>2.3.2</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_4.0_spec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>nl.topicus.cobra</groupId>
-      <artifactId>cobra-commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-bindings-soap</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-transports-http</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.cxf</groupId>
-          <artifactId>cxf-codegen-plugin</artifactId>
-          <version>${topicus.version.org.apache.cxf}</version>
-          <executions>
-            <execution>
-              <id>generate-sources</id>
-              <phase>generate-sources</phase>
-              <configuration>
-                <sourceRoot>${basedir}/target/generated-sources/webservice</sourceRoot>
-                <defaultOptions>
-                  <extraargs>
-                    <extraarg>-exsh</extraarg>
-                    <extraarg>true</extraarg>
-                    <extraarg>-verbose</extraarg>
-                  </extraargs>
-                </defaultOptions>
-                <wsdlOptions>
-                  <wsdlOption>
-                    <wsdl>
-                      ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v1/wsdl/UWLR_Leerlinggegevens.wsdl
-                    </wsdl>
-                    <wsdlLocation>
-                      classpath:nl/topicus/onderwijs/eck2/v1/wsdl/UWLR_Leerlinggegevens.wsdl
-                    </wsdlLocation>
-                    <serviceName>LeerlinggegevensService</serviceName>
-                    <extraargs>
-                      <extraarg>-p</extraarg>
-                      <extraarg>nl.topicus.onderwijs.generated.uwlr.v1_0</extraarg>
-                    </extraargs>
-                    <bindingFiles>
-                      <bindingFile>
-                        ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v1/wsdl/UWLR_Leerlinggegevens.xjb
-                      </bindingFile>
-                      <bindingFile>
-                        ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v1/Schemas/bindings.xjb
-                      </bindingFile>
-                    </bindingFiles>
-                  </wsdlOption>
-                  <wsdlOption>
-                    <wsdl>
-                      ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v2/wsdl/UWLR_Leerlinggegevens_v2p2.wsdl
-                    </wsdl>
-                    <wsdlLocation>
-                      classpath:nl/topicus/onderwijs/eck2/v2/wsdl/UWLR_Leerlinggegevens_v2p2.wsdl
-                    </wsdlLocation>
-                    <serviceName>LeerlinggegevensService</serviceName>
-                    <extraargs>
-                      <extraarg>-p</extraarg>
-                      <extraarg>nl.topicus.onderwijs.generated.uwlr.v2_0</extraarg>
-                      <extraarg>-xjc-Xdv</extraarg>
-                    </extraargs>
-                    <bindingFiles>
-                      <bindingFile>
-                        ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v2/wsdl/UWLR_Leerlinggegevens_v2p2.xjb
-                      </bindingFile>
-                      <bindingFile>
-                        ${basedir}/src/main/resources/nl/topicus/onderwijs/eck2/v2/Schemas/bindings.xjb
-                      </bindingFile>
-                    </bindingFiles>
-                  </wsdlOption>
-                </wsdlOptions>
-              </configuration>
-              <goals>
-                <goal>wsdl2java</goal>
-              </goals>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.cxf.xjcplugins</groupId>
-              <artifactId>cxf-xjc-dv</artifactId>
-              <!-- Oudere versie van deze plugin, nieuwere versie probeert interface List direct te instantiëren -->
-              <version>3.3.0</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-codegen-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+  <url>http://www.topicus.nl/onderwijs</url>
 </project>

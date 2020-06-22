@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/toetsdefinities"
+  xmlns="http://www.edustandaard.nl/leerresultaten/2/toetsdefinities"
+  xmlns:lr="http://www.edustandaard.nl/leerresultaten/2/leerresultaten" version="2.2">
+  <!-- ================================================================== -->
+  <!--* Schema voor de overdracht van alleen toetsdefinities.
+    
+        UWLR_Toetsdefinities_v2p2.xsd (versie 20161214)
+        
+        Wijzigingshistorie:
+        20161214: eerste versie voor UWLR v2.2.
+        20160112: UWLR v2.1.
+        20150622: eerste versie voor UWLR v2.0.
+  -->
+  <!-- ================================================================== -->
+  <xs:import namespace="http://www.edustandaard.nl/leerresultaten/2/leerresultaten" schemaLocation="UWLR_Leerresultaten_v2p2.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+      <versie>UWLR 2.2</versie>
+      <auteur>Jos van der Arend. Origineel door Marc Fleischeuers en Erik Siegel (UWLR v1.0).</auteur>
+      <omschrijving>Dit document definieert de structuur voor het overdragen van Toetsdefinities conform de afspraak UWLR 2.2 (zie www.edustandaard.nl).</omschrijving>
+    </xs:documentation>
+  </xs:annotation>
+  <!-- -->
+  <xs:element name="Toetsdefinities">
+    <xs:complexType>
+      <xs:group ref="lr:gToetsen"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

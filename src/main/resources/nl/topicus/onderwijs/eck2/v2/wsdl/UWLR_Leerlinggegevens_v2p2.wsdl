@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:lg="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens"
+  xmlns:aut="http://www.edustandaard.nl/leerresultaten/2/autorisatie"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens">
+  <!-- ================================================================== -->
+  <!--* WSDL bestand voor de afspraak Leerresultaten - Leerlinggegevens
+          Inclusief variant voor de getrapte overdracht van gegevens
+
+        UWLR_Leerlinggegevens_v2p2.wsdl (versie 20161214)
+        
+        Wijzigingshistorie:
+        20161214: eerste versie voor UWLR v2.2.
+        20160201: correctie in operation "HaalStructuur".
+        20160112: UWLR v2.1.
+        20150622: eerste versie voor UWLR v2.0.
+  -->
+  <!-- ================================================================== -->
+  <!-- Schema definities: -->
+  <!-- -->
+  <wsdl:types>
+    <xs:schema>
+      <xs:import schemaLocation="../Schemas/UWLR_Leerlinggegevens_v2p2.xsd"
+        namespace="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens"/>
+      <xs:import schemaLocation="../Schemas/UWLR_Autorisatie_v2p2.xsd"
+        namespace="http://www.edustandaard.nl/leerresultaten/2/autorisatie"/>
+    </xs:schema>
+  </wsdl:types>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Berichten -->
+  <!-- -->
+  <wsdl:message name="msgHeader">
+    <wsdl:part name="msgpHeader" element="aut:autorisatie"/>
+  </wsdl:message>
+  <!-- -->
+  <wsdl:message name="msgLeerlinggegevensVerzoek">
+    <wsdl:part name="msgpLeerlinggegevensVerzoek" element="lg:leerlinggegevens_verzoek"/>
+  </wsdl:message>
+  <wsdl:message name="msgLeerlinggegevensAntwoord">
+    <wsdl:part name="msgpLeerlinggegevensAntwoord" element="lg:leerlinggegevens_antwoord"/>
+  </wsdl:message>
+  <!-- -->
+  <wsdl:message name="msgStructuurVerzoek">
+    <wsdl:part name="msgStructuurVerzoek" element="lg:structuur_verzoek"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgStructuurAntwoord">
+    <wsdl:part name="msgStructuurAntwoord" element="lg:structuur_antwoord"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgStructuurFault">
+    <wsdl:part name="msgStructuurFault" element="lg:StructuurFault"></wsdl:part>
+  </wsdl:message>
+  <!-- -->
+  <wsdl:message name="msgLeerlingenVerzoek">
+    <wsdl:part name="msgLeerlingenVerzoek" element="lg:leerlingen_verzoek"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgLeerlingenAntwoord">
+    <wsdl:part name="msgLeerlingenAntwoord" element="lg:leerlingen_antwoord"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgLeerlingenFault">
+    <wsdl:part name="msgLeerlingenFault" element="lg:LeerlingenFault"></wsdl:part>
+  </wsdl:message>
+  <!-- -->
+  <wsdl:message name="msgLeerkrachtenVerzoek">
+    <wsdl:part name="msgLeerkrachtenVerzoek" element="lg:leerkrachten_verzoek"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgLeerkrachtenAntwoord">
+    <wsdl:part name="msgLeerkrachtenAntwoord" element="lg:leerkrachten_antwoord"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="msgLeerkrachtenFault">
+    <wsdl:part name="msgLeerkrachtenFault" element="lg:LeerkrachtenFault"></wsdl:part>
+  </wsdl:message>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Port: -->
+  <!-- -->
+  <wsdl:portType name="prtLeerlinggegevens">
+    <wsdl:operation name="HaalLeerlinggegevens">
+      <wsdl:input message="lg:msgLeerlinggegevensVerzoek"/>
+      <wsdl:output message="lg:msgLeerlinggegevensAntwoord"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="prtGetrapt">
+    <wsdl:operation name="HaalLeerkrachten">
+      <wsdl:input message="lg:msgLeerkrachtenVerzoek" />
+      <wsdl:output message="lg:msgLeerkrachtenAntwoord" />
+      <wsdl:fault name="fault" message="lg:msgLeerkrachtenFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="HaalLeerlingen">
+      <wsdl:input message="lg:msgLeerlingenVerzoek"></wsdl:input>
+      <wsdl:output message="lg:msgLeerlingenAntwoord"></wsdl:output>
+      <wsdl:fault name="fault" message="lg:msgLeerlingenFault"></wsdl:fault>
+    </wsdl:operation>
+    <!--20160201: foutieve benamingen van input en output hersteld -->
+    <wsdl:operation name="HaalStructuur">
+      <wsdl:input message="lg:msgStructuurVerzoek"></wsdl:input>
+      <wsdl:output message="lg:msgStructuurAntwoord"></wsdl:output>
+      <wsdl:fault name="fault" message="lg:msgStructuurFault"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Binding: -->
+  <!-- -->
+  <wsdl:binding name="bndLeerlinggegevens" type="lg:prtLeerlinggegevens">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="HaalLeerlinggegevens">
+      <soap:operation soapAction="HaalLeerlinggegevens"/>
+      <wsdl:input>
+        <soap:header message="lg:msgHeader" part="msgpHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="bndLeerlinggegevens-getrapt" type="lg:prtGetrapt">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HaalStructuur">
+      <soap:operation soapAction="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens/structuur_verzoek" />
+      <wsdl:input>
+        <soap:header message="lg:msgHeader" part="msgpHeader" use="literal" />
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="HaalLeerlingen">
+      <soap:operation soapAction="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens/leerlingen_verzoek" />
+      <wsdl:input>
+        <soap:header message="lg:msgHeader" part="msgpHeader" use="literal" />
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="HaalLeerkrachten">
+      <soap:operation soapAction="http://www.edustandaard.nl/leerresultaten/2/leerlinggegevens/leerkrachten_verzoek" />
+      <wsdl:input>
+        <soap:header message="lg:msgHeader" part="msgpHeader" use="literal" />
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Service: -->
+  <!-- -->
+  <wsdl:service name="LeerlinggegevensService">
+    <wsdl:port name="prtLeerlinggegevensService" binding="lg:bndLeerlinggegevens">
+      <soap:address location="http://localhost:8080/NOTDEFINEDYET"/>
+    </wsdl:port>
+    <wsdl:port name="prtLeerlinggegevensService-getrapt" binding="lg:bndLeerlinggegevens-getrapt">
+      <soap:address location="http://localhost:8080/NOTDEFINEDYET" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

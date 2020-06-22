@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="2.2"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/autorisatie"
+  xmlns="http://www.edustandaard.nl/leerresultaten/2/autorisatie"
+  xmlns:au="http://www.edustandaard.nl/leerresultaten/2/autorisatie">
+  <!-- ================================================================== -->
+  <!--* Schema voor de autorisatie gegevens bij overdracht leerlinggegevens 
+        en leerresultaten.
+    
+        UWLR_Autorisatie_v2p21.xsd (versie 20161214)
+        
+        Wijzigingshistorie:
+        20161214: UWLR v2.2.
+        20160112: UWLR v2.1.
+        20150622: eerste versie voor UWLR v2.0.
+  -->
+  <!-- ================================================================== -->
+  <!-- -->
+  <xs:annotation>
+    <xs:documentation>
+      <versie>UWLR 2.2</versie>
+      <auteur>Jos van der Arend. Origineel door Marc Fleischeuers en Erik Siegel (UWLR v1.0).</auteur>
+      <omschrijving>Dit document definieert de structuur voor het overdragen van autorisatiegegevens conform de afspraak UWLR 2.2 (zie www.edustandaard.nl).</omschrijving>
+    </xs:documentation>
+  </xs:annotation>
+  <!-- -->
+  <xs:element name="autorisatie">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="autorisatiesleutel" type="tpString64"/>
+        <xs:element name="klantcode" type="tpString64"/>
+        <xs:element name="klantnaam" type="tpString64"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="tpString64">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 64.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

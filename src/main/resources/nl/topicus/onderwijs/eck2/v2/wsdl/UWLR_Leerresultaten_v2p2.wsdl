@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:lr="http://www.edustandaard.nl/leerresultaten/2/leerresultaten"
+  xmlns:aut="http://www.edustandaard.nl/leerresultaten/2/autorisatie"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/leerresultaten">
+  <!-- ================================================================== -->
+  <!--* WSDL bestand voor de afspraak Leerresultaten - Leerresultaten
+    
+        UWLR_Leerresultaten_v2p2.wsdl (versie 20170301)
+        
+        Wijzigingshistorie:
+        20170301: Correctie van diverse foutieve benamingen Leerresultaten (was Leerlinggegevens) in UWLR v2.2.
+        20161214: UWLR v2.2.
+        20160112: UWLR v2.1.
+        20150622: eerste versie voor UWLR v2.0.  -->
+  <!-- ================================================================== -->
+  <!-- Schema definities: -->
+  <!-- -->
+  <wsdl:types>
+    <xs:schema>
+      <xs:import schemaLocation="../Schemas/UWLR_Leerresultaten_v2p2.xsd"
+        namespace="http://www.edustandaard.nl/leerresultaten/2/leerresultaten"/>
+      <xs:import schemaLocation="../Schemas/UWLR_Autorisatie_v2p2.xsd"
+        namespace="http://www.edustandaard.nl/leerresultaten/2/autorisatie"/>
+    </xs:schema>
+  </wsdl:types>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Berichten -->
+  <!-- -->
+  <wsdl:message name="msgHeader">
+    <wsdl:part name="msgpHeader" element="aut:autorisatie"/>
+  </wsdl:message>
+  <!-- -->
+  <wsdl:message name="msgLeerresultaten">
+    <wsdl:part name="msgpLeerresultatenVerzoek" element="lr:leerresultaten_verzoek"/>
+  </wsdl:message>
+  <!-- -->
+  <!-- 20170301 msgLeerlinggegevensAntwoord veranderd in: msgLeerresultatenAntwoord -->
+  <wsdl:message name="msgLeerresultatenAntwoord">
+    <wsdl:part name="msgpLeerresultatenAntwoord" element="lr:leerresultaten_bevestiging"/>
+  </wsdl:message>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Port: -->
+  <!-- -->
+  <!-- 20170301 msgLeerlinggegevensAntwoord veranderd in: msgLeerresultatenAntwoord -->
+  <wsdl:portType name="prtLeerresultaten">
+    <wsdl:operation name="BrengLeerresultaten">
+      <wsdl:input message="lr:msgLeerresultaten"/>
+      <wsdl:output message="lr:msgLeerresultatenAntwoord"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Binding: -->
+  <!-- -->
+  <!-- 20170301 bndLeerlinggegevens veranderd in: bndLeerresultaten -->
+  <wsdl:binding name="bndLeerresultaten" type="lr:prtLeerresultaten">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="BrengLeerresultaten">
+      <soap:operation soapAction="BrengLeerresultaten"/>
+      <wsdl:input>
+        <soap:header message="lr:msgHeader" part="msgpHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- -->
+  <!-- ================================================================== -->
+  <!-- Service: -->
+  <!-- -->
+  <!-- 20170301 LeerlinggegevensService veranderd in: LeerresultatenService -->
+  <!-- 20170301 prtLeerlinggegevensService veranderd in: prtLeerresultatenService -->
+  <!-- 20170301 bndLeerlinggegevens veranderd in: bndLeerresultaten -->
+  <wsdl:service name="LeerresultatenService">
+    <wsdl:port name="prtLeerresultatenService" binding="lr:bndLeerresultaten">
+      <soap:address location="http://localhost:8080/NOTDEFINEDYET"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

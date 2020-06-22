@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.edustandaard.nl/leerresultaten/2/leerresultaten"
+  xmlns:lr="http://www.edustandaard.nl/leerresultaten/2/leerresultaten"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:oso="http://www.edustandaard.nl/oso_gegevensset/1.2/dossier" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="2.2"
+  targetNamespace="http://www.edustandaard.nl/leerresultaten/2/leerresultaten">
+  <!-- ================================================================== -->
+  <!--* Schema voor de leerresultaten.
+    
+        UWLR_Leerresultaten_v2p2.xsd (versie 20170515)
+        
+        Wijzigingshistorie:
+        20170515: In navolging van EDEXML is de lengte van het veld <schoolkey> in het verzoek van leerresultaten ook opgerekt naar 256 karakters
+        20161214: eerste versie voor UWLR v2.2 met veld <eckid> optioneel toegevoegd aan <resultaat>.
+        20160609: Wijzigingen conform werkgroep overleg 8 juni 2016 doorgevoerd: 
+                  1) veld <versie> bij <resultaat> toegevoegd
+                  2) <toetsonderdeelcode> optioneel gemaakt binnen <resultaat>
+                  3) veld <toetsonderdelen> binnen <toets> optioneel gemaakt
+                  4) Eerste regel "<?xml version="1.0" encoding="UTF-8"?>" in dit bestand toegevoegd. 
+        20160202: de elementen toetscategorie en toetsniveau vocabulaire gebonden gemaakt
+        20160112: UWLR v2.1.
+        20150622: eerste versie voor UWLR v2.0.
+  -->
+  <!-- ================================================================== -->
+  <!-- -->
+  <xs:import namespace="http://www.edustandaard.nl/oso_gegevensset/1.2/dossier" schemaLocation="Overstapdossier_1.2_20150302.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+      <versie>UWLR 2.2</versie>
+      <auteur>Jos van der Arend. Origineel door Marc Fleischeuers en Erik Siegel (UWLR v1.0).</auteur>
+      <omschrijving>Dit document definieert de structuur voor het overdragen van Leerresultaten conform de afspraak UWLR 2.2 (zie www.edustandaard.nl).</omschrijving>
+    </xs:documentation>
+  </xs:annotation>
+  <!-- -->
+  <xs:element name="leerresultaten_verzoek">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="school" type="ctpSchool"/>
+        <xs:element name="toetsafnames">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="toetsafname" type="ctpToetsafname"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:group ref="gToetsen"/>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="kResultaat">
+      <xs:selector xpath="lr:toetsafnames/lr:toetsafname/lr:resultaten/lr:resultaat"/>
+      <xs:field xpath="@key"/>
+    </xs:key>
+    <xs:key name="kToetscode">
+      <xs:selector xpath="lr:toetsen/lr:toets"/>
+      <xs:field xpath="lr:toetscode"/>
+    </xs:key>
+    <xs:keyref name="krAfnameToets" refer="kToetscode">
+      <xs:selector xpath="lr:toetsafnames/lr:toetsafname/lr:resultaten/lr:resultaat"/>
+      <xs:field xpath="lr:toetscode"/>
+    </xs:keyref>
+  </xs:element>
+  <xs:element name="leerresultaten_bevestiging" type="ctpLeeg"/>
+  <xs:complexType name="ctpToetsafname">
+    <xs:sequence>
+      <xs:element name="leerlingid" type="tpKey"/>
+      <!-- 20161214: volgende veld <eckid> optioneel toegevoegd -->
+      <xs:element name="eckid" type="tpKey" minOccurs="0"/>
+      <xs:element name="resultaatverwerkerid" type="tpKey" minOccurs="0"/>
+      <xs:element name="resultaten">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="resultaat" type="ctpResultaat"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ctpResultaat">
+    <xs:sequence>
+      <xs:element name="afnamedatum" type="xs:date"/>
+      <xs:element name="toetscode" type="tpKey"/>
+      <!--  20160609: volgende veld <versie> optioneel toegevoegd (wijziging conform werkgroep overleg 8 juni 2016) -->
+      <xs:element name="versie" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <!--  20160609: volgende veld <toetsonderdeelcode> optioneel gemaakt (wijziging conform werkgroep overleg 8 juni 2016) -->
+      <xs:element name="toetsonderdeelcode" type="tpKey" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="score" type="tpScore"/>
+        <xs:element name="osoresultaat" type="ctpOsoResultaat"/>
+        <xs:element name="anderresultaat" type="ctpAnderResultaatType">
+        </xs:element>
+      </xs:choice>
+      <xs:element name="infourl" type="tpString256" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="tpKey" use="required"/>
+  </xs:complexType>
+  <xs:group name="gToetsen">
+    <xs:sequence>
+      <xs:element name="toetsen">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="toets" type="ctpToets"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="ctpToets">
+    <xs:sequence>
+      <xs:element name="toetscode" type="ctpVocabulaireGebondenVeld"/>
+      <xs:element name="versie" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <xs:element name="toetsnaam" type="tpString128" minOccurs="0"/>
+      <xs:element name="leerjaar" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <xs:element name="vakgebied" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <xs:element name="toetsnormering" type="ctpNormering" minOccurs="0"/>
+      <xs:element name="toetshierarchie" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="ingang">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ctpVocabulaireGebondenVeld">
+                    <xs:attribute name="niveau" type="xs:integer" use="required"/>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--  20160609: volgende veld <toetsonderdeelen> optioneel gemaakt (wijziging conform werkgroep overleg 8 juni 2016) -->
+      <xs:element name="toetsonderdelen" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="toetsonderdeel" type="ctpToetsOnderdeel"/>
+          </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uOnderdeelVolgnummer">
+          <xs:selector xpath="lr:toetsonderdeel"/>
+          <xs:field xpath="lr:toetsonderdeelvolgnummer"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ctpToetsOnderdeel">
+    <xs:sequence>
+      <xs:element name="toetsonderdeelvolgnummer" type="xs:positiveInteger"/>
+     <xs:element name="toetsonderdeelcode" type="ctpVocabulaireGebondenVeld"/>
+      <xs:element name="toetsonderdeelnaam" type="tpString128" minOccurs="0"/>
+      <xs:element name="toetsonderdeelnormering" type="ctpNormering" minOccurs="0">
+        <xs:unique name="uScoreNorm">
+          <xs:selector xpath="lr:norm"/>
+          <xs:field xpath="lr:scoregrotergelijkaan"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ctpNormering">
+    <xs:annotation>
+      <xs:documentation>Alleen relevant als het resultaat als een score wordt weergegeven. In het geval van een OSO resultaat moet dit indien aanwezig genegeerd worden.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <!--20160202: de elementen toetscategorie en toetsniveau vocabulaire gebonden gemaakt; 20160112: Drie nieuwe elementen toegevoegd: -->
+      <xs:element name="toetscategorie" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <xs:element name="toetsniveau" type="ctpVocabulaireGebondenVeld" minOccurs="0"/>
+      <xs:element name="wegingsfactor" type="xs:decimal" minOccurs="0"/>
+      <xs:element maxOccurs="unbounded" name="norm">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="term" type="tpString64"/>
+            <xs:element name="omschrijving" type="tpString128" minOccurs="0"/>
+            <!--20160112: element verwijderd-->
+            <!--<xs:element name="scoregrotergelijkaan" type="tpScore"/>-->
+            <!--20160112: Vijf nieuwe elementen toegevoegd: -->
+            <xs:element name="beginnormwaarde" type="tpScore"/>
+            <xs:element name="eindnormwaarde" type="tpScore"/>
+            <xs:element name="normkleur" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="rood_code" type="tpKleurcode"/>
+                  <xs:element name="groen_code" type="tpKleurcode"/>
+                  <xs:element name="blauw_code" type="tpKleurcode"/>
+                  <xs:element name="transparantie" type="tpTransparatiecode"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="schoolcijfer_vanaf" type="tpSchoolcijfer" minOccurs="0"/>
+            <xs:element name="schoolcijfer_totenmet" type="tpSchoolcijfer" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <!--20160112: element maxscore verwijderd-->
+    <xs:attributeGroup ref="agVocabulaireBinding"/>
+    <!--<xs:attribute name="maxscore" type="tpScore" use="required"/>-->
+  </xs:complexType>
+  <!--20160112: Nieuwe elementtype toegevoegd: -->
+  <xs:simpleType name="tpKleurcode">
+    <xs:annotation>
+      <xs:documentation>Normkleur volgens RGBA (kleur en transparantie)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--20160112: Nieuwe elementtype toegevoegd: -->
+  <xs:simpleType name="tpTransparatiecode">
+    <xs:annotation>
+      <xs:documentation>Transparantie volgens RGBA (kleur en transparantie). De Alpha is het percentage transparantie van 1 (niet transparant) tot 0 (volledig transparant).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0.00"/>
+      <xs:maxInclusive value="1.00"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--20160112: Nieuwe elementtype toegevoegd: -->
+  <xs:simpleType name="tpSchoolcijfer">
+    <xs:annotation>
+      <xs:documentation>Schoolcijfer met waarde vanaf 1,00 t/m 10,00.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="1.00"/>
+      <xs:maxInclusive value="10.00"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpScore">
+    <xs:annotation>
+      <xs:documentation>Resultaat in de vorm van een scoregetal</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger"/>
+  </xs:simpleType>
+  <xs:complexType name="ctpOsoResultaat">
+    <xs:annotation>
+      <xs:documentation>Resultaat volgens de OSO definities</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="oso:toetsscore" minOccurs="0" />
+      <xs:element ref="oso:referentiescore" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ctpLeeg">
+    <xs:annotation>
+      <xs:documentation>Type om een verplicht leeg element mee aan te duiden</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:simpleType name="tpKey">
+    <xs:restriction base="tpString256"> </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ctpVocabulaireGebondenVeld">
+    <xs:simpleContent>
+      <xs:extension base="tpString256">
+        <xs:attributeGroup ref="agVocabulaireBinding"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:attributeGroup name="agVocabulaireBinding">
+    <xs:attribute name="vocabulaire" type="xs:anyURI"/>
+    <xs:attribute form="unqualified" name="vocabulairelocatie" type="xs:anyURI"/>
+  </xs:attributeGroup>
+  <xs:complexType final="extension" name="ctpSchool">
+    <xs:sequence>
+      <xs:element name="schooljaar" type="tpSchooljaar"/>
+      <xs:group ref="gSchoolIdentificatie"/>
+      <xs:element name="aanmaakdatum" type="xs:dateTime"/>
+      <xs:element name="auteur" type="tpString128" minOccurs="0"/>
+      <xs:element name="xsdversie" type="tpString32">
+        <xs:annotation>
+          <xs:documentation>Altijd gelijk aan de versie van de XSD waaraan gerefereerd
+            wordt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="commentaar" type="tpString128" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="gSchoolIdentificatie">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="brincode" type="tpBrinCode"/>
+        <xs:element name="dependancecode" default="00" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>De inhoud 00 is betekent hetzelfde als leeg</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="tpDependanceCode">
+              <xs:pattern value="\p{Nd}{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+      <!--20170515: lengte van schoolkey opgerekt naar 256 karakters (was 64) -->
+      <xs:element name="schoolkey" type="tpString256"/>
+    </xs:choice>
+  </xs:group>
+  <xs:simpleType name="tpBrinCode">
+    <xs:annotation>
+      <xs:documentation>Brincode school. Formaat 99XX
+
+</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\p{Nd}{2}\p{Lu}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpSchooljaar">
+    <xs:annotation>
+      <xs:documentation>Formaat: jaar-jaar, bijvoorbeeld: 2011-2012</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[1-2]\p{Nd}{3}-[1-2]\p{Nd}{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpDependanceCode">
+    <xs:restriction base="tpString32">
+      <xs:pattern value="\p{Nd}{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString256">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 256.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="256"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString128">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 128.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="128"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString64">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 64.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tpString32">
+    <xs:annotation>
+      <xs:documentation>String met minimale lengte 1 en maximale lengte 32.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ctpAnderResultaatType" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Structuur om het formaat van eigen resultaat in te definieren. Het veld andere_score is voorbeeldmatig toegevoegd.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="andere_score" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

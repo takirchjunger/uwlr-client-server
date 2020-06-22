@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+	jaxb:extensionBindingPrefixes="inheritance" jaxb:version="2.1">
+	<jaxb:globalBindings>
+		<xjc:simple />
+	</jaxb:globalBindings>
+	<jaxb:bindings schemaLocation="UWLR_Leerlinggegevens_v1p0.xsd"
+		node="/xsd:schema">
+		<jaxb:bindings node="xsd:complexType[@name='ctpLeerling']/xsd:sequence/xsd:choice">
+			<jaxb:bindings node="xsd:element[@name='roepnaam']">
+				<jaxb:property name="voornaam"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="xsd:sequence/xsd:element[@name='voorletters-1']">
+				<jaxb:property name="voorletters"/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:complexType[@name='ctpLeerkracht']/xsd:sequence/xsd:choice">
+			<jaxb:bindings node="xsd:element[@name='roepnaam']">
+				<jaxb:property name="voornaam"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="xsd:sequence/xsd:element[@name='voorletters-1']">
+				<jaxb:property name="voorletters"/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+</jaxb:bindings>	

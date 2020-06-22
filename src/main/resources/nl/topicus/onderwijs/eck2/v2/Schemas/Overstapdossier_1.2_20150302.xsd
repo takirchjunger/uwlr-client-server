@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Gedeeltelijke hergebruik van OSO versie 1.2: toetsscore & referentiescore tbv UWLR
+-->
+<xs:schema xmlns="http://www.edustandaard.nl/oso_gegevensset/1.2/dossier" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.edustandaard.nl/oso_gegevensset/1.2/dossier" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="toetsscore" type="toetsscoreType"/>
+	<xs:complexType name="toetsscoreType">
+		<xs:sequence>
+			<xs:element name="aantalopgaven" type="xs:int" minOccurs="0"/>
+			<xs:element name="aantalgoed" type="xs:int" minOccurs="0"/>
+			<xs:element name="aantalfout" type="xs:int" minOccurs="0"/>
+			<xs:element name="aantalgelezen" type="xs:int" minOccurs="0"/>
+			<xs:element name="tijd" type="xs:decimal" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>in seconden</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="vaardigheidsscore" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="codevaardigheidsschaal" type="nonEmptyStringType" minOccurs="0"/>
+			<xs:element name="betrouwbaarheidsinterval" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="bivlaag" type="xs:decimal"/>
+						<xs:element name="bivhoog" type="xs:decimal"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="nonEmptyStringType" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="referentiescore" type="referentiescoreType"/>
+	<xs:complexType name="referentiescoreType">
+		<xs:sequence>
+			<xs:element name="codereferentiescore" type="nonEmptyStringType">
+				<xs:annotation>
+					<xs:documentation>Toegestane waarden in codelijst 11 in bestand OSO codelijsten.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codevergelijkingsgroep" type="nonEmptyStringType">
+				<xs:annotation>
+					<xs:documentation>Toegestane waarden in codelijst 22 in bestand OSO codelijsten.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="waarde" type="nonEmptyStringType"/>
+			<xs:element name="kwalificatie" type="nonEmptyStringType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+</xs:schema>

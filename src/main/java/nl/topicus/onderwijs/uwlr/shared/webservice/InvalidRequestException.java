@@ -1,13 +1,13 @@
 package nl.topicus.onderwijs.uwlr.shared.webservice;
 
 import nl.topicus.onderwijs.generated.uwlr.v2_2.Leerlinggegevens;
-import nl.topicus.onderwijs.uwlr.shared.webservice.UwlrConstants.LeerlinggegevensRequestElements;
+import nl.topicus.onderwijs.uwlr.shared.webservice.Constants.LeerlinggegevensRequestElements;
 
 /**
  * Exception die wordt gegooid als een opgebouwde Leerlinggegevens structuur ongeldig is. Dit kan
  * bijvoorbeeld het geval zijn als één of meer verplichte delen uit deze structuur leeg zijn.
  */
-public class InvalidLeerlinggegevensRequestException extends Exception {
+public class InvalidRequestException extends Exception {
 
   private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public class InvalidLeerlinggegevensRequestException extends Exception {
    * @param invalidElement Element of veld waarop de {@link Leerlinggegevens} structuur ongeldig is
    *     bevonden.
    */
-  public InvalidLeerlinggegevensRequestException(
+  public InvalidRequestException(
       String message, final LeerlinggegevensRequestElements invalidElement) {
     super(message);
     this.invalidElement = invalidElement;
@@ -32,7 +32,7 @@ public class InvalidLeerlinggegevensRequestException extends Exception {
    * @param throwable gewrapte exception die ten grondslag ligt aan deze
    *     InvalidLeerlinggegevensException
    */
-  public InvalidLeerlinggegevensRequestException(
+  public InvalidRequestException(
       String message, final LeerlinggegevensRequestElements element, final Throwable throwable) {
     super(message, throwable);
     this.invalidElement = element;

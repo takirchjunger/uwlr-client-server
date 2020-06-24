@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.topicus.onderwijs</groupId>
   <artifactId>uwlr-client-server</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0-RC1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>UWLR Leerlinggegevens Client/Server library</name>
   <properties>
@@ -21,6 +21,8 @@
     <jboss-servlet-api_4.0_spec.version>1.0.0.Final</jboss-servlet-api_4.0_spec.version>
     <jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-log4j12.version>1.7.30</slf4j-log4j12.version>
     <spring-beans.version>5.1.12.RELEASE</spring-beans.version>
@@ -71,14 +73,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven-compiler-plugin.version}</version>
-          <configuration>
-            <release>11</release>
-          </configuration>
-        </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
@@ -164,9 +158,9 @@
   </developers>
   <inceptionYear>2020</inceptionYear>
   <scm>
-    <connection>scm:git:git@github.com:takirchjunger/eck2-client-server.git</connection>
+    <connection>scm:git:git@github.com:takirchjunger/uwlr-client-server.git</connection>
     <tag>HEAD</tag>
-    <url>https://github.com/takirchjunger/eck2-client-server</url>
+    <url>https://github.com/takirchjunger/uwlr-client-server</url>
   </scm>
   <url>https://topicus.nl/platformen?sector=onderwijs</url>
 </project>

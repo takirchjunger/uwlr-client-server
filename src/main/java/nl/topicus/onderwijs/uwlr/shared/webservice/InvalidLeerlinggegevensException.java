@@ -18,7 +18,7 @@ public class InvalidLeerlinggegevensException extends Exception {
   /**
    * @param message omschrijving van de opgetreden fout
    * @param throwable gewrapte exception die ten grondslag ligt aan deze {@link
-   *     InvalidLeerlinggegevensRequestException}
+   *     InvalidRequestException}
    */
   public InvalidLeerlinggegevensException(String message, Throwable throwable) {
     super(message, throwable);

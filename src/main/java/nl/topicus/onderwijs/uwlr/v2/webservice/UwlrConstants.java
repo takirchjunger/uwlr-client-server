@@ -2,7 +2,7 @@ package nl.topicus.onderwijs.uwlr.v2.webservice;
 
 import javax.xml.namespace.QName;
 
-public final class Eck2WebserviceConstants {
+public final class UwlrConstants {
   public static final String EDUSTANDAARD_AUTORISATIE_NS =
       "http://www.edustandaard.nl/leerresultaten/2/autorisatie";
 

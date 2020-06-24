@@ -1,9 +1,9 @@
 package nl.topicus.onderwijs.uwlr.shared.webservice.interceptors;
 
 import javax.xml.namespace.QName;
-import nl.topicus.onderwijs.uwlr.shared.webservice.UwlrFaultType;
-import nl.topicus.onderwijs.uwlr.shared.webservice.UwlrSoapFault;
-import nl.topicus.onderwijs.uwlr.shared.webservice.UwlrConstants.AutorisatieHeaderElements;
+import nl.topicus.onderwijs.uwlr.shared.webservice.FaultType;
+import nl.topicus.onderwijs.uwlr.shared.webservice.SoapFault;
+import nl.topicus.onderwijs.uwlr.shared.webservice.Constants.AutorisatieHeaderElements;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.binding.soap.interceptor.EndpointSelectionInterceptor;
@@ -36,7 +36,7 @@ public abstract class AbstractAutorisatieHeaderValidator extends AbstractSoapInt
   public void handleMessage(final SoapMessage message) throws Fault {
     Header header = message.getHeader(getAutorisatieQname());
     if (header == null)
-      throw new UwlrSoapFault(UwlrFaultType.CLT_AUTORISATIE_ONGELDIG, "Autorisatieheader is leeg");
+      throw new SoapFault(FaultType.CLT_AUTORISATIE_ONGELDIG, "Autorisatieheader is leeg");
 
     Element element = (Element) header.getObject();
 
@@ -55,8 +55,8 @@ public abstract class AbstractAutorisatieHeaderValidator extends AbstractSoapInt
         || node.getLength() != 1
         || node.item(0) == null
         || "".equals(node.item(0).getTextContent()))
-      throw new UwlrSoapFault(
-          UwlrFaultType.CLT_AUTORISATIE_ONGELDIG,
+      throw new SoapFault(
+          FaultType.CLT_AUTORISATIE_ONGELDIG,
           String.format(
               "Ongeldig of ontbrekend element '%s' in autorisatieheader",
               headerElement.getElementName()));

@@ -1,7 +1,7 @@
 package nl.topicus.onderwijs.uwlr.shared.webservice;
 
-public final class UwlrConstants {
-  private UwlrConstants() {}
+public final class Constants {
+  private Constants() {}
 
   /** Elementen in een leerlinggegevens request */
   public enum LeerlinggegevensRequestElements {

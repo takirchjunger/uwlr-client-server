@@ -1,7 +1,7 @@
 package nl.topicus.onderwijs.uwlr.shared.webservice;
 
-/** Types foutberichten zoals gespecificeerd in de Eck2-afspraak. */
-public enum UwlrFaultType {
+/** Types foutberichten zoals gespecificeerd in de UWLR afspraak. */
+public enum FaultType {
 
   /** Serverfouten: */
   SRV_INTERNE_FOUT("Server.InterneFout", "Er is een interne fout opgetreden"),
@@ -26,7 +26,7 @@ public enum UwlrFaultType {
 
   private final String message;
 
-  UwlrFaultType(String code, String message) {
+  FaultType(String code, String message) {
     this.code = code;
     this.message = message;
   }

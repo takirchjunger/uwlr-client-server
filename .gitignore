@@ -1,11 +1,8 @@
-src/main/java/nl/edustandaard/
 target/
 .classpath
 .project
 .settings/
 *.log
-rebel.xml
 .DS_Store
 .idea/
-eck2.iml
 

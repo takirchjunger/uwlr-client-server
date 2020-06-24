@@ -6,14 +6,14 @@ import nl.topicus.onderwijs.generated.uwlr.v2_2.LeerlinggegevensAntwoord;
 import nl.topicus.onderwijs.generated.uwlr.v2_2.ObjectFactory;
 
 /**
- * Factory voor objecten die betrekking hebben op Eck2 Soap-berichten. Fungeert als extra laag op de
+ * Factory voor objecten die betrekking hebben op UWRL Soap-berichten. Fungeert als extra laag op de
  * ObjectFactory classes die door CXF worden gegenereerd, om het instantiëren van deze classes in
  * projecten te vereenvoudigen.
  */
-public final class Eck2SoapObjectFactory {
+public final class UwlrSoapObjectFactory {
   private static final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
-  private Eck2SoapObjectFactory() {}
+  private UwlrSoapObjectFactory() {}
 
   public static LeerlinggegevensAntwoord createLeerlinggegevensResponse(
       final Leerlinggegevens leerlinggegevens) {

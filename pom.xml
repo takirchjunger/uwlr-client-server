@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.topicus.onderwijs</groupId>
   <artifactId>uwlr-client-server</artifactId>
-  <version>1.0-RC1</version>
+  <version>1.0-RC2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>UWLR Leerlinggegevens Client/Server library</name>
   <properties>
@@ -171,7 +171,7 @@
   <inceptionYear>2020</inceptionYear>
   <scm>
     <connection>scm:git:git@github.com:takirchjunger/uwlr-client-server.git</connection>
-    <tag>uwlr-client-server-1.0-RC1</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/takirchjunger/uwlr-client-server</url>
   </scm>
   <url>https://topicus.nl/platformen?sector=onderwijs</url>

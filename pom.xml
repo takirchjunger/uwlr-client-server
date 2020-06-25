@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.topicus.onderwijs</groupId>
   <artifactId>uwlr-client-server</artifactId>
@@ -156,19 +158,42 @@
   </developers>
   <distributionManagement>
     <repository>
-      <name>Maven Repository Manager running on topicus.nl</name>
-      <id>topicus-repository</id>
-      <layout>default</layout>
-      <url>http://repo-onderwijs.topicus.local/artifactory/repo</url>
+      <name>topicus-repo.local-releases</name>
+      <id>topicus-repo</id>
+      <uniqueVersion>false</uniqueVersion>
+      <url>https://repo.topicusonderwijs.nl/artifactory/libs-releases-local</url>
     </repository>
     <snapshotRepository>
-      <name>Maven Repository Manager running on topicus.nl</name>
-      <id>topicus-repository</id>
-      <layout>default</layout>
-      <url>http://repo-onderwijs.topicus.local/artifactory/repo</url>
+      <name>topicus-repo.local-snapshots</name>
+      <id>topicus-repo</id>
+      <uniqueVersion>false</uniqueVersion>
+      <url>https://repo.topicusonderwijs.nl/artifactory/libs-snapshots-local</url>
     </snapshotRepository>
   </distributionManagement>
-  <inceptionYear>2020</inceptionYear>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>https://repo.topicusonderwijs.nl/artifactory/maven</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>central</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>https://repo.topicusonderwijs.nl/artifactory/maven</url>
+    </repository>
+  </repositories>
   <scm>
     <connection>scm:git:git@github.com:takirchjunger/uwlr-client-server.git</connection>
     <tag>HEAD</tag>

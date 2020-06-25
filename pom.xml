@@ -170,7 +170,6 @@
       <url>https://repo.topicusonderwijs.nl/artifactory/libs-snapshots-local</url>
     </snapshotRepository>
   </distributionManagement>
-  <inceptionYear>2020</inceptionYear>
   <pluginRepositories>
     <pluginRepository>
       <id>central</id>
